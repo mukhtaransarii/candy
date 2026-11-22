@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For Candy 💖</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            candy: {
+              50: '#fff5f8',
+              100: '#ffe4ec',
+              200: '#ffc8d9',
+              300: '#ffa6c1',
+              400: '#ff7fa6',
+              500: '#f7568a',
+              600: '#e0336f',
+            },
+          },
+          fontFamily: {
+            cute: ['"Pacifico"', 'cursive'],
+            body: ['"Quicksand"', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Quicksand:wght@500;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ---------- Background floating hearts ---------- */
+    .float-heart {
+      position: fixed;
+      bottom: -40px;
+      pointer-events: none;
+      animation: floatUp linear forwards;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: .8; }
+      100% { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* ---------- Rain of hearts on YES ---------- */
+    .rain-heart {
+      position: fixed;
+      top: -50px;
+      pointer-events: none;
+      z-index: 50;
+      animation: rainDown linear forwards;
+    }
+    @keyframes rainDown {
+      0%   { transform: translateY(0) rotate(0deg); }
+      100% { transform: translateY(115vh) rotate(540deg); }
+    }
+
+    /* ---------- Burst hearts ---------- */
+    .burst-heart {
+      position: fixed;
+      pointer-events: none;
+      z-index: 60;
+      animation: burst 1.2s ease-out forwards;
+    }
+    @keyframes burst {
+      0%   { transform: translate(0, 0) scale(.4); opacity: 1; }
+      100% { transform: translate(var(--x), var(--y)) scale(1.4); opacity: 0; }
+    }
+
+    /* ---------- Kitty animations ---------- */
+    .kitty-bob   { animation: bob 2.4s ease-in-out infinite; }
+    @keyframes bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    .ear-left  { transform-origin: 70px 60px;  animation: earL 3s ease-in-out infinite; }
+    .ear-right { transform-origin: 130px 60px; animation: earR 3s ease-in-out infinite; }
+    @keyframes earL { 0%,85%,100% { transform: rotate(0); } 90% { transform: rotate(-12deg); } }
+    @keyframes earR { 0%,85%,100% { transform: rotate(0); } 92% { transform: rotate(12deg); } }
+
+    .eye { transform-origin: center; transform-box: fill-box; animation: blink 4s infinite; }
+    @keyframes blink { 0%,94%,100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+
+    .tail { transform-origin: 150px 165px; animation: wag 1.2s ease-in-out infinite; }
+    @keyframes wag { 0%,100% { transform: rotate(-8deg); } 50% { transform: rotate(14deg); } }
+
+    .paw-heart { animation: pulse 1.2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+    @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+    /* happy state: swap eyes */
+    .happy .eyes-normal { display: none; }
+    .eyes-happy { display: none; }
+    .happy .eyes-happy { display: inline; }
+
+    /* ---------- Misc ---------- */
+    .glass {
+      background: rgba(255, 255, 255, .55);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+    .shimmer-text {
+      background: linear-gradient(90deg, #f7568a, #ff9ec0, #e0336f, #ff9ec0, #f7568a);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: shimmer 4s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 300% 0; } }
+
+    .pop-in { animation: popIn .7s cubic-bezier(.2, 1.6, .4, 1) both; }
+    @keyframes popIn { 0% { transform: scale(0); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+    #noBtn { transition: left .25s ease, top .25s ease, transform .2s ease; }
+    #yesBtn { transition: transform .25s ease; }
+
+    .cursor::after { content: '|'; animation: caret 1s steps(1) infinite; color: #f7568a; }
+    @keyframes caret { 50% { opacity: 0; } }
+  </style>
+</head>
+
+<body class="min-h-screen overflow-hidden bg-gradient-to-br from-candy-50 via-candy-100 to-candy-200 font-body text-candy-600 select-none">
+
+  <!-- Background hearts layer -->
+  <div id="bgHearts"></div>
+
+  <!-- ================= SCREEN 1 : QUESTION ================= -->
+  <main id="askScreen" class="relative z-10 flex min-h-screen items-center justify-center p-4">
+    <div class="glass pop-in w-full max-w-md rounded-[2rem] border border-white/70 p-8 text-center shadow-2xl shadow-candy-300/50">
+
+      <!-- Kitty (animated SVG — swap with <img src="your.gif"> if you prefer a GIF) -->
+      <div id="kitty" class="kitty-bob mx-auto mb-4 w-48">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- tail -->
+          <path class="tail" d="M150 165 Q190 150 180 110" stroke="#ffb3c9" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <!-- body -->
+          <ellipse cx="100" cy="160" rx="52" ry="34" fill="#fff"/>
+          <!-- ears -->
+          <g class="ear-left">
+            <path d="M48 75 L60 25 L95 58 Z" fill="#fff"/>
+            <path d="M58 65 L64 38 L84 57 Z" fill="#ffc8d9"/>
+          </g>
+          <g class="ear-right">
+            <path d="M152 75 L140 25 L105 58 Z" fill="#fff"/>
+            <path d="M142 65 L136 38 L116 57 Z" fill="#ffc8d9"/>
+          </g>
+          <!-- head -->
+          <ellipse cx="100" cy="92" rx="58" ry="48" fill="#fff"/>
+          <!-- bow -->
+          <g transform="translate(128 52)">
+            <path d="M0 0 L-16 -10 L-16 10 Z" fill="#f7568a"/>
+            <path d="M0 0 L16 -10 L16 10 Z" fill="#f7568a"/>
+            <circle r="5" fill="#e0336f"/>
+          </g>
+          <!-- eyes normal -->
+          <g class="eyes-normal">
+            <ellipse class="eye" cx="78" cy="90" rx="7" ry="9" fill="#3b2a33"/>
+            <ellipse class="eye" cx="122" cy="90" rx="7" ry="9" fill="#3b2a33"/>
+            <circle cx="80" cy="87" r="2.5" fill="#fff"/>
+            <circle cx="124" cy="87" r="2.5" fill="#fff"/>
+          </g>
+          <!-- eyes happy -->
+          <g class="eyes-happy" stroke="#3b2a33" stroke-width="4" fill="none" stroke-linecap="round">
+            <path d="M70 92 Q78 82 86 92"/>
+            <path d="M114 92 Q122 82 130 92"/>
+          </g>
+          <!-- blush -->
+          <ellipse cx="64" cy="106" rx="10" ry="6" fill="#ffa6c1" opacity=".8"/>
+          <ellipse cx="136" cy="106" rx="10" ry="6" fill="#ffa6c1" opacity=".8"/>
+          <!-- nose + mouth -->
+          <path d="M96 102 L104 102 L100 107 Z" fill="#f7568a"/>
+          <path d="M100 107 Q94 115 88 110 M100 107 Q106 115 112 110" stroke="#3b2a33" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <!-- whiskers -->
+          <g stroke="#e8c4d0" stroke-width="2" stroke-linecap="round">
+            <path d="M40 98 L62 101"/><path d="M40 108 L62 106"/>
+            <path d="M160 98 L138 101"/><path d="M160 108 L138 106"/>
+          </g>
+          <!-- paws holding heart -->
+          <path class="paw-heart" d="M100 168 C 86 154, 72 162, 84 176 L100 190 L116 176 C 128 162, 114 154, 100 168 Z" fill="#f7568a"/>
+          <ellipse cx="78" cy="172" rx="12" ry="9" fill="#fff" stroke="#ffd6e2" stroke-width="2"/>
+          <ellipse cx="122" cy="172" rx="12" ry="9" fill="#fff" stroke="#ffd6e2" stroke-width="2"/>
+        </svg>
+      </div>
+
+      <h1 class="font-cute text-3xl leading-snug sm:text-4xl">
+        Do you love me <span class="shimmer-text">Candy?</span> 🥺
+      </h1>
+      <p id="hint" class="mt-3 h-6 text-sm text-candy-400">Choose wisely, princess 🎀</p>
+
+      <!-- Buttons -->
+      <div id="btnArea" class="relative mt-8 flex h-20 items-center justify-center gap-6">
+        <button id="yesBtn"
+          class="z-20 rounded-full bg-gradient-to-r from-candy-400 to-candy-500 px-8 py-3 text-lg font-bold text-white shadow-lg shadow-candy-400/50 hover:brightness-110 active:scale-95">
+          Yes 💖
+        </button>
+        <button id="noBtn"
+          class="z-30 rounded-full border-2 border-candy-300 bg-white px-8 py-3 text-lg font-bold text-candy-500 shadow-md">
+          No 🙈
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= SCREEN 2 : CELEBRATION ================= -->
+  <section id="loveScreen" class="relative z-10 hidden min-h-screen flex-col items-center justify-center p-4 text-center">
+    <div class="glass pop-in w-full max-w-lg rounded-[2rem] border border-white/70 p-8 shadow-2xl shadow-candy-300/50">
+      <div id="kittyHappySlot" class="mx-auto mb-2 w-44"></div>
+
+      <h2 class="font-cute text-4xl sm:text-6xl">
+        <span class="shimmer-text">I Love You Candy</span>
+      </h2>
+      <div class="mt-3 text-4xl">💖💕💗💓💞</div>
+
+      <p id="loveMsg" class="cursor mx-auto mt-6 min-h-[4.5rem] max-w-sm text-lg font-semibold text-candy-500"></p>
+
+      <!-- Little extras -->
+      <div class="mt-6 grid grid-cols-3 gap-3 text-sm font-bold">
+        <div class="rounded-2xl bg-white/70 p-3 shadow">
+          <div class="text-2xl">🌸</div>Cutest
+        </div>
+        <div class="rounded-2xl bg-white/70 p-3 shadow">
+          <div class="text-2xl">🍬</div>Sweetest
+        </div>
+        <div class="rounded-2xl bg-white/70 p-3 shadow">
+          <div class="text-2xl">👑</div>My Queen
+        </div>
+      </div>
+
+      <div class="mt-6 flex flex-wrap justify-center gap-3">
+        <button id="moreLoveBtn"
+          class="rounded-full bg-gradient-to-r from-candy-400 to-candy-500 px-6 py-2 font-bold text-white shadow-lg hover:brightness-110 active:scale-95">
+          More love 💘
+        </button>
+        <button id="replayBtn"
+          class="rounded-full border-2 border-candy-300 bg-white px-6 py-2 font-bold text-candy-500 shadow hover:bg-candy-50 active:scale-95">
+          Ask again 🔁
+        </button>
+      </div>
+
+      <p class="mt-5 text-xs text-candy-400">Tap anywhere for hearts ✨</p>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>
