@@ -14,6 +14,18 @@ const loveMsg     = document.getElementById('loveMsg');
 const moreLoveBtn = document.getElementById('moreLoveBtn');
 const replayBtn   = document.getElementById('replayBtn');
 
+// ---------- Name from URL:  ?name=Candy ----------
+const params   = new URLSearchParams(window.location.search);
+const rawName  = (params.get('name') || '').trim().slice(0, 20);   // max 20 chars
+const NAME     = rawName
+  ? rawName.charAt(0).toUpperCase() + rawName.slice(1)             // candy → Candy
+  : 'Cutie';                                                       // fallback
+
+document.querySelectorAll('.js-name').forEach((el) => {
+  el.textContent = NAME;            // textContent = safe, no HTML injection
+});
+document.title = `For ${NAME} 💖`;
+
 // ---------- Config (edit these freely) ----------
 const HEARTS = ['💖', '💕', '💗', '💓', '💞', '💘', '❤️', '🩷', '🌸', '✨'];
 
@@ -32,7 +44,7 @@ const LOVE_MESSAGES = [
   'You make every day sweeter than candy 🍬',
   'You are my favourite notification 📱💖',
   'Forever and always, it’s you 🌸',
-  'My heart beats in your name, Candy 💓',
+  `My heart beats in your name, ${NAME} 💓`,
 ];
 
 let dodgeCount = 0;
